@@ -24,6 +24,7 @@ function OrdersContent() {
   const token = (searchParams.get('token') || '').trim();
   const theme = searchParams.get('theme') === 'dark' ? 'dark' : 'light';
   const uiMode = searchParams.get('ui_mode') || 'standalone';
+  const srcHost = searchParams.get('src_host') || '';
   const isDark = theme === 'dark';
 
   const [isIframeContext, setIsIframeContext] = useState(true);
@@ -178,7 +179,7 @@ function OrdersContent() {
       actions={
         <>
           <button type="button" onClick={() => loadOrders(page, pageSize)} className={btnClass}>刷新</button>
-          <a href={buildScopedUrl('/pay')} className={btnClass}>返回充值</a>
+          {!srcHost && <a href={buildScopedUrl('/pay')} className={btnClass}>返回充值</a>}
         </>
       }
     >
