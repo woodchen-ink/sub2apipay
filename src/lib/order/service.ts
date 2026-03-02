@@ -102,6 +102,7 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
       userId: input.userId,
       userEmail: user.email,
       userName: user.username,
+      userNotes: user.notes || null,
       amount: new Prisma.Decimal(input.amount.toFixed(2)),
       rechargeCode: '',
       status: 'PENDING',

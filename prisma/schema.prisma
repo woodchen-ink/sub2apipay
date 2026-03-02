@@ -11,6 +11,7 @@ model Order {
   userId        Int         @map("user_id")
   userEmail     String?     @map("user_email")
   userName      String?     @map("user_name")
+  userNotes     String?     @map("user_notes")
   amount        Decimal     @db.Decimal(10, 2)
   rechargeCode  String      @unique @map("recharge_code")
   status        OrderStatus @default(PENDING)

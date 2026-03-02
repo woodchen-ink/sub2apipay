@@ -4,6 +4,7 @@ export interface Sub2ApiUser {
   email: string;
   status: string; // "active", "banned", etc.
   balance: number;
+  notes?: string;
 }
 
 export interface Sub2ApiRedeemCode {

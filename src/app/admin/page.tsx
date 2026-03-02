@@ -12,6 +12,7 @@ interface AdminOrder {
   userId: number;
   userName: string | null;
   userEmail: string | null;
+  userNotes: string | null;
   amount: number;
   status: string;
   paymentType: string;

@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         userId: true,
         userName: true,
         userEmail: true,
+        userNotes: true,
         amount: true,
         status: true,
         paymentType: true,

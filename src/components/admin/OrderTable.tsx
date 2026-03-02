@@ -5,6 +5,7 @@ interface Order {
   userId: number;
   userName: string | null;
   userEmail: string | null;
+  userNotes: string | null;
   amount: number;
   status: string;
   paymentType: string;
@@ -48,7 +49,9 @@ export default function OrderTable({ orders, onRetry, onCancel, onViewDetail, da
         <thead className={dark ? 'bg-slate-800/50' : 'bg-gray-50'}>
           <tr>
             <th className={thCls}>订单号</th>
-            <th className={thCls}>用户</th>
+            <th className={thCls}>用户名</th>
+            <th className={thCls}>邮箱</th>
+            <th className={thCls}>备注</th>
             <th className={thCls}>金额</th>
             <th className={thCls}>状态</th>
             <th className={thCls}>支付方式</th>
@@ -71,10 +74,11 @@ export default function OrderTable({ orders, onRetry, onCancel, onViewDetail, da
                     {order.id.slice(0, 12)}...
                   </button>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-sm">
-                  <div className={dark ? 'text-slate-200' : ''}>{order.userName || '-'}</div>
-                  <div className={`text-xs ${dark ? 'text-slate-500' : 'text-gray-400'}`}>{order.userEmail || `ID: ${order.userId}`}</div>
+                <td className={`whitespace-nowrap px-4 py-3 text-sm ${dark ? 'text-slate-200' : ''}`}>
+                  {order.userName || `#${order.userId}`}
                 </td>
+                <td className={tdMuted}>{order.userEmail || '-'}</td>
+                <td className={tdMuted}>{order.userNotes || '-'}</td>
                 <td className={`whitespace-nowrap px-4 py-3 text-sm font-medium ${dark ? 'text-slate-200' : ''}`}>¥{order.amount.toFixed(2)}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-sm">
                   <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${dark ? statusInfo.dark : statusInfo.light}`}>
