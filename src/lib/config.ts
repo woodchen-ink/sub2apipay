@@ -137,6 +137,10 @@ export function getEnv(): Env {
   env.ALIPAY_PRIVATE_KEY = resolveKeyValue(env.ALIPAY_PRIVATE_KEY);
   env.ALIPAY_PUBLIC_KEY = resolveKeyValue(env.ALIPAY_PUBLIC_KEY);
 
+  // 微信支付密钥：支持直接传内容或传文件路径
+  env.WXPAY_PRIVATE_KEY = resolveKeyValue(env.WXPAY_PRIVATE_KEY);
+  env.WXPAY_PUBLIC_KEY = resolveKeyValue(env.WXPAY_PUBLIC_KEY);
+
   cachedEnv = env;
   return cachedEnv;
 }
