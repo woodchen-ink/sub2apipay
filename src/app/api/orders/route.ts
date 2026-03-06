@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
       amount,
       paymentType: payment_type,
       clientIp,
+      isMobile: is_mobile,
       srcHost: src_host,
       srcUrl: src_url,
-      isMobile: is_mobile,
     });
 
     // 不向客户端暴露 userName / userBalance 等隐私字段
