@@ -142,12 +142,29 @@ function PayContent() {
   const hasPlans = plans.length > 0;
   // 是否可以充值（未禁用且有支付方式）
   const canTopUp = !balanceDisabled && config.enabledPaymentTypes.length > 0;
+  const subscriptionOnlyMode = !canTopUp && hasPlans;
+  const effectiveMainTab = subscriptionOnlyMode ? 'subscribe' : !hasPlans && canTopUp ? 'topup' : mainTab;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     setIsIframeContext(window.self !== window.top);
     setIsMobile(detectDeviceIsMobile());
   }, []);
+
+  useEffect(() => {
+    if (!canTopUp && showTopUpForm) {
+      setShowTopUpForm(false);
+    }
+
+    if (subscriptionOnlyMode && mainTab !== 'subscribe') {
+      setMainTab('subscribe');
+      return;
+    }
+
+    if (!hasPlans && canTopUp && mainTab !== 'topup') {
+      setMainTab('topup');
+    }
+  }, [canTopUp, hasPlans, mainTab, showTopUpForm, subscriptionOnlyMode]);
 
   useEffect(() => {
     if (!isMobile || step !== 'form') return;
@@ -494,10 +511,14 @@ function PayContent() {
   const allEntriesClosed = channelsLoaded && userLoaded && !canTopUp && !hasPlans;
   const showMainTabs = channelsLoaded && userLoaded && !allEntriesClosed && (hasChannels || hasPlans);
   const pageTitle = showMainTabs
-    ? pickLocaleText(locale, '选择适合你的 充值/订阅服务', 'Choose Your Recharge / Subscription')
+    ? subscriptionOnlyMode
+      ? pickLocaleText(locale, '选择适合你的套餐订阅', 'Choose Your Subscription Plan')
+      : pickLocaleText(locale, '选择适合你的 充值/订阅服务', 'Choose Your Recharge / Subscription')
     : pickLocaleText(locale, 'Sub2API 余额充值', 'Sub2API Balance Recharge');
   const pageSubtitle = showMainTabs
-    ? pickLocaleText(locale, '充值余额或者订阅套餐', 'Top up balance or subscribe to a plan')
+    ? subscriptionOnlyMode
+      ? pickLocaleText(locale, '选择套餐并完成订阅开通', 'Choose a plan and activate your subscription')
+      : pickLocaleText(locale, '充值余额或者订阅套餐', 'Top up balance or subscribe to a plan')
     : pickLocaleText(locale, '安全支付，自动到账', 'Secure payment, automatic crediting');
 
   return (
@@ -595,7 +616,9 @@ function PayContent() {
                       : 'text-slate-500 hover:text-slate-700',
                 ].join(' ')}
               >
-                {pickLocaleText(locale, '充值', 'Recharge')}
+                {subscriptionOnlyMode
+                  ? pickLocaleText(locale, '套餐订阅', 'Subscription')
+                  : pickLocaleText(locale, '充值', 'Recharge')}
               </button>
               <button
                 type="button"
@@ -667,7 +690,7 @@ function PayContent() {
             !showTopUpForm && (
               <>
                 <MainTabs
-                  activeTab={!canTopUp ? 'subscribe' : mainTab}
+                  activeTab={effectiveMainTab}
                   onTabChange={setMainTab}
                   showSubscribeTab={hasPlans}
                   showTopUpTab={canTopUp}
@@ -675,7 +698,7 @@ function PayContent() {
                   locale={locale}
                 />
 
-                {mainTab === 'topup' && canTopUp && (
+                {effectiveMainTab === 'topup' && canTopUp && (
                   <div className="mt-6">
                     {/* 按量付费说明 banner */}
                     <div
@@ -794,7 +817,7 @@ function PayContent() {
                   </div>
                 )}
 
-                {mainTab === 'subscribe' && (
+                {effectiveMainTab === 'subscribe' && (
                   <div className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {plans.map((plan) => (
